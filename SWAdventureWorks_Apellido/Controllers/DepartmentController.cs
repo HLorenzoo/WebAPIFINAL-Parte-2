@@ -55,5 +55,32 @@ namespace SWAdventureWorks_Apellido.Controllers
             return Ok();
         }
 
+        [HttpDelete("{id}")]
+        public ActionResult<Department> Delete(short id)
+        {
+            var department = (from c in context.Department
+                         where c.DepartmentId == id
+                         select c).SingleOrDefault();
+
+            if (department == null)
+            {
+                return NotFound();
+            }
+            context.Department.Remove(department);
+            context.SaveChanges();
+            return department;
+
         }
+        [HttpPut("{id}")]
+        public ActionResult<Department> Put(short id, [FromBody] Department department)
+        {
+            if (id != department.DepartmentId)
+            {
+                return BadRequest();
+            }
+            context.Entry(department).State = EntityState.Modified;
+            context.SaveChanges();
+            return Ok();
+        }
+    }
     }
